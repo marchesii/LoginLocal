@@ -9,16 +9,16 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 public class BemVindoActivity extends AppCompatActivity {
-
     private TextView mensagemTextView;
     private String usuario;
     private String senha;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i(getString(R.string.tag), "Classe: " + getClass().getSimpleName() +  "| Método : onCreate()");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bem_vindo);
-
         mensagemTextView = findViewById(R.id.textview_mensagem);
         //Apresenta navigation up
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -28,21 +28,52 @@ public class BemVindoActivity extends AppCompatActivity {
         senha = intent.getStringExtra(getString(R.string.key_senha));
         //Vamos anaisar se o usuário pode logar ou não
         validarUsuario();
-    }
-
-    private void validarUsuario() {
+    }private void validarUsuario(){
         //Observe que a validação se dá com os dados armazenados no arquivo de recursos.
-        if (usuario.equals(getString(R.string.user_default)) &&
-                senha.equals(getString(R.string.passwd_default))) {
+        if(usuario.equals(getString(R.string.user_default)) &&
+                senha.equals(getString(R.string.passwd_default))){
             mensagemTextView.setText(R.string.bem_vindo_msg);
-        } else {
+        }else{
             mensagemTextView.setText(R.string.erro_login_msg);
         }
     }
 
     @Override
+    protected void onStart() {
+        Log.i(getString(R.string.tag), "Classe: " + getClass().getSimpleName() +  "| Método : onStart()");
+        super.onStart();
+    }
+
+    @Override
+    protected void onRestart() {
+        Log.i(getString(R.string.tag), "Classe: " + getClass().getSimpleName() +  "| Método : onRestart()");
+        super.onRestart();
+    }
+
+    @Override
+    protected void onResume() {
+        Log.i(getString(R.string.tag), "Classe: " + getClass().getSimpleName() +  "| Método : onResu" + "me()");
+        super.onResume();
+    }
+    @Override
+    protected void onPause() {
+        Log.i(getString(R.string.tag), "Classe: " + getClass().getSimpleName() +  "| Método : onPause()");
+        super.onPause();
+    }
+    @Override
+    protected void onStop() {
+        Log.i(getString(R.string.tag), "Classe: " + getClass().getSimpleName() +  "| Método : onStop()");
+        super.onStop();
+    }
+    @Override
+    protected void onDestroy() {
+        Log.i(getString(R.string.tag), "Classe: " + getClass().getSimpleName() +  "| Método : onDestroy()");
+        super.onDestroy();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
+        if(item.getItemId() == android.R.id.home){
             finish();
         }
         return super.onOptionsItemSelected(item);

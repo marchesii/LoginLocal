@@ -14,6 +14,9 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private SharedPreferences mSharedPreferences;
+    private SharedPreferences.Editor mEditor;
+
     private EditText usuarioEditText;
     private EditText senhaEditText;
     private Button logarButton;
@@ -36,6 +39,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         lembrarCheckBox = findViewById(R.id.checkbox_lembrar);
         novoUsuarioTextView = findViewById(R.id.textview_novo);
         logarButton.setOnClickListener(this);
+        novoUsuarioTextView.setOnClickListener(this);
+
+        //Vamos instanciar as preferencias em modo privado, ou seja, somente acessíveis
+        // ao próprio app.
+        mSharedPreferences = this.getPreferences(MODE_PRIVATE);
+        mEditor = mSharedPreferences.edit();
     }
 
     @Override
@@ -53,6 +62,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         Log.i(getString(R.string.tag), "Classe: " + getClass().getSimpleName() +  "| Método : onResu" + "me()");
+
+        verificarPreferencias();
+
         super.onResume();
     }
     @Override
@@ -80,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(this, R.string.erro_entrada_msg, Toast.LENGTH_SHORT).show();
                 return;
             }
+            salvaPreferencias();
             abrirBoasVindas();
             return;
         }
@@ -92,5 +105,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         args.putString(getString(R.string.key_senha), senha);
         in.putExtras(args);
         startActivity(in);   
+    }
+
+    private void salvaPreferencias(){
+        //Caso o checkbox esteja marcado, armazenamos os dados no objeto,
+        // caso contrário vamos apenas armazenar um vazio.
+        if(lembrarCheckBox.isChecked()){
+            mEditor.putString(getString(R.string.key_usuario), usuario);
+            mEditor.commit();
+            mEditor.putString(getString(R.string.key_senha), senha);
+            mEditor.commit();
+            mEditor.putBoolean(getString(R.string.key_lembrar), true);
+            mEditor.commit();
+        }else{mEditor.putString(getString(R.string.key_usuario), "");
+        mEditor.commit();
+        mEditor.putString(getString(R.string.key_senha), "");
+        mEditor.commit();
+        mEditor.putBoolean(getString(R.string.key_lembrar), false);
+        mEditor.commit();}
+    }
+
+    /*Aqui recuperamos as preferências do usuário, e caso existam (boolean lembrar) atualizamos os dados na tela da activity.*/
+    private void verificarPreferencias() {
+        usuario = mSharedPreferences.getString(getString(R.string.key_usuario), "");
+        senha = mSharedPreferences.getString(getString(R.string.key_senha), "");
+        boolean lembrar = mSharedPreferences.getBoolean(getString(R.string.key_lembrar), false);
+        if(lembrar){usuarioEditText.setText(usuario);
+        senhaEditText.setText(senha);
+        lembrarCheckBox.setChecked(true);
+        }
     }
 }
